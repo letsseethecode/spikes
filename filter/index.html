@@ -1,0 +1,204 @@
+<html>
+
+<head>
+    <title>Image Filter Test</title>
+    <script>
+        window.addEventListener('load', function () {
+            var totalDuration = 5000;
+            var lineCount = 50;
+            var rasterCount = 150;
+            var rasterLineDuration = 250;
+
+            var lineDuration = totalDuration / lineCount;
+            var filter = document.getElementsByClassName("filter")[0];
+            for (var i = 0; i < lineCount; i++) {
+                var line = document.createElement("div");
+                line.className = "filter__line";
+                line.style.animationDuration = totalDuration + "ms";
+                line.style.animationDelay = (lineDuration * i) + "ms";
+
+                var shutter = document.createElement("div");
+                shutter.className = "filter__shutter";
+                shutter.style.animationDuration = lineDuration + "ms";
+                shutter.style.animationDelay = (lineDuration * (i + 1)) + "ms";
+
+                line.appendChild(shutter);
+                filter.appendChild(line);
+            }
+            var raster = document.getElementsByClassName("raster")[0];
+            raster.style.animationDelay = (totalDuration * 2) + "ms";
+            raster.style.animationDuration = "1s";
+            for (var i = 0; i < rasterCount; i++) {
+                var line = document.createElement("div");
+                line.className = "raster__line";
+                line.style.animationDelay = (totalDuration * 2) + "ms";
+                line.style.animationDuration = (Math.floor(Math.random() * 10) * rasterLineDuration) + "ms";
+                raster.appendChild(line);
+            }
+
+        });
+    </script>
+    <style>
+        html,
+        body {
+            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: black;
+            color: white;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .layour__background {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .layout__header,
+        .layout__footer {
+            flex: 1 1 auto;
+            z-index: 1;
+        }
+
+        .layout__main {
+            flex: 0 0 667px;
+            z-index: 1;
+        }
+
+        .raster {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+            animation: raster;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            border: solid 10px red;
+        }
+
+        .raster__line {
+            flex: 1 1 auto;
+            animation: raster-line;
+            animation-timing-function: step-end;
+            animation-iteration-count: 1000;
+        }
+
+        @keyframes raster {
+            0% {}
+
+            100% {}
+        }
+
+        @keyframes raster-line {
+            0% {
+                background-color: black;
+            }
+
+            50% {
+                background-color: green;
+            }
+
+            100% {
+                background-color: black;
+            }
+        }
+
+        .filter {
+            background-image: url(./duck-hunt.jpeg);
+            background-size: contain;
+            width: 1000px;
+            height: 667px;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+
+        .filter__line {
+            flex: 1 1 auto;
+            font-size: 40px;
+            animation-name: reveal;
+            animation-fill-mode: forwards;
+            backdrop-filter: grayscale() brightness(0%);
+            animation-timing-function: step-end;
+            position: relative;
+        }
+
+        .filter__shutter {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: black;
+            width: 100%;
+            height: 100%;
+            animation: shutter;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes shutter {
+            0% {
+                width: 100%;
+            }
+
+            100% {
+                width: 0%;
+            }
+        }
+
+        @keyframes reveal {
+            0% {
+                backdrop-filter: grayscale() brightness(0%);
+            }
+
+            2% {
+                backdrop-filter: grayscale() brightness(100%);
+            }
+
+            92% {
+                backdrop-filter: grayscale() brightness(100%);
+            }
+
+            100% {
+                backdrop-filter: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <div class="layour__background">
+            <div class="raster"></div>
+        </div>
+        <div class="layout__header">
+            <h1>Greyscale lines</h1>
+        </div>
+        <div class="layout__main">
+            <div class="layout__content">
+                <div class="filter"></div>
+            </div>
+        </div>
+        <div class="layout__footer">
+
+        </div>
+    </div>
+</body>
+
+</html>
