@@ -2,6 +2,22 @@
 
 This project defines a Domain Specific Language ([DSL](https://en.wikipedia.org/wiki/Domain-specific_language)) that is in the style of old text adventures, like [Zork](https://en.wikipedia.org/wiki/Zork).
 
+## Come see me talk about this in more detail
+
+You can see me going into this spike in more depth on [Twitch](https://twitch.tv/letsseethecode).
+
+* 📅 Monday 29th April 2024
+* 🕰️ 6:30pm UK time (1:30 EST, 10:30 PST)
+* 📍 https://twitch.tv/letsseethecode
+
+## How to run
+
+```
+cargo run
+```
+
+## Details
+
 ```rust
     story!(
         go north.
@@ -33,9 +49,3 @@ The example below demonstrates a compiler error when trying to `give potion to w
 caused by the fact that there was a previous `drop potion` command executed.
 
 ![compiler errors](./images/compiler_errors.png)
-
-## How to run
-
-```
-cargo run
-```
