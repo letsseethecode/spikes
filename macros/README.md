@@ -18,6 +18,8 @@ cargo run
 
 ## Details
 
+You write your story like this.
+
 ```rust
     story!(
         go north.
@@ -29,9 +31,15 @@ cargo run
     );
 ```
 
-And this generates the following console output
+The story is made of any number of the following lines, terminated by a `.`:
+* `go <north|east|south|west>`
+* `take <item>`
+* `drop <item>`
+* `give <item> to <person>`
 
-```rust
+When you run the story above, you will see the following output to the console.
+
+```
 This is your story!
 You headed north.
 You headed east.
