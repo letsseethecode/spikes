@@ -1,5 +1,6 @@
 use proc_macro::TokenStream;
 use quote::quote;
+use std::fmt::Display;
 use syn::{parse::Parse, parse_macro_input, Ident, Token};
 
 pub(crate) mod keyword {
@@ -10,11 +11,23 @@ pub(crate) mod keyword {
     syn::custom_keyword!(to);
 }
 
+#[derive(Debug)]
 enum Direction {
     North,
     East,
     South,
     West,
+}
+
+impl Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::North => write!(f, "north"),
+            Self::East => write!(f, "east"),
+            Self::South => write!(f, "south"),
+            Self::West => write!(f, "west"),
+        }
+    }
 }
 
 impl Parse for Direction {
@@ -45,7 +58,6 @@ pub(crate) struct Story {
 
 impl Parse for Story {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        println!("Starting story");
         let mut result = Story {
             messages: vec![],
             items: vec![],
@@ -61,16 +73,20 @@ impl Parse for Story {
                     return Err(syn::Error::new(
                         item.span(),
                         format!(
-                            "Impossible, you were not carrying any {} at this point",
+                            "Impossible, you were not carrying any {} at this point.",
                             item
                         ),
                     ));
                 }
                 result.items.retain(|s| s != &item.to_string());
+                result
+                    .messages
+                    .push(format!("You gave {} to {}.", item, person));
             } else if la.peek(keyword::take) {
                 input.parse::<keyword::take>()?;
-                let item = input.parse::<Ident>()?.to_string();
-                result.items.push(item);
+                let item = input.parse::<Ident>()?;
+                result.items.push(item.to_string());
+                result.messages.push(format!("You took a {}.", item));
             } else if la.peek(keyword::drop) {
                 input.parse::<keyword::drop>()?;
                 let item = input.parse::<Ident>()?;
@@ -78,15 +94,17 @@ impl Parse for Story {
                     return Err(syn::Error::new(
                         item.span(),
                         format!(
-                            "Impossible, you were not carrying any {} at this point",
+                            "Impossible, you were not carrying any {} at this point.",
                             item
                         ),
                     ));
                 }
                 result.items.retain(|s| s != &item.to_string());
+                result.messages.push(format!("You dropped a {}.", item));
             } else if la.peek(keyword::go) {
                 input.parse::<keyword::go>()?;
                 let dir = input.parse::<Direction>()?;
+                result.messages.push(format!("You headed {}.", dir));
             } else {
                 break;
             }
@@ -109,7 +127,7 @@ pub fn story(input: TokenStream) -> TokenStream {
     quote! {
         println!("This is your story!");
         #steps
-        println!("The END");
+        println!("The END!");
     }
     .into()
 }

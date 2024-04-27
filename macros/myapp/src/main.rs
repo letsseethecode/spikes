@@ -6,7 +6,6 @@ fn main() {
         go east.
         take potion.
         drop potion.
-        give potion to wizard.
         go west.
         go south.
     );
