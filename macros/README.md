@@ -33,3 +33,9 @@ The example below demonstrates a compiler error when trying to `give potion to w
 caused by the fact that there was a previous `drop potion` command executed.
 
 ![compiler errors](./images/compiler_errors.png)
+
+## How to run
+
+```
+cargo run
+```
